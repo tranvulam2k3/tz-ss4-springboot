@@ -1,0 +1,67 @@
+BÀI TẬP THỰC HÀNH: SPRING BOOT RESTFUL API (BUỔI 2)
+
+1. Yêu cầu chung
+- Áp dụng kiến trúc 3 lớp: Controller - Service - Data (ArrayList).
+- Dữ liệu trả về phải bọc trong class ApiResponse<T>.
+- Sử dụng DTO (Request/Response) để giao tiếp API, không dùng trực tiếp Entity.
+- Cấu hình Swagger để hiển thị và kiểm thử tất cả các API.
+- Tự khởi tạo mock data (ít nhất 5 bản ghi cho mỗi thực thể).
+
+2. Các thực thể (Entities)
+
+2.1 Student (Thông tin học viên)
+- UUID id
+- String fullName
+- LocalDate dob (Ngày sinh)
+- String phone
+- String email
+- String address
+
+2.2 StudentScore (Bảng điểm học viên)
+- UUID id
+- Student student (Liên kết với thực thể Student)
+- String studentCode (Mã học viên)
+- double scoreMath
+- double scoreEnglish
+- double scoreLiterature
+
+3. Danh sách API cần thực hiện
+
+3.1 Đối với thực thể Student (Quản lý học viên)
+
+Nhóm Cơ bản (CRUD)
+1. Lấy danh sách học viên: GET /api/v1/students
+2. Lấy chi tiết học viên theo ID: GET /api/v1/students/{id}
+3. Thêm mới học viên: POST /api/v1/students (Yêu cầu: ID tự sinh UUID).
+
+Nhóm Nâng cao (Xử lý Logic)
+4. Tìm kiếm học viên: GET /api/v1/students
+   - Params: name (tìm kiếm không phân biệt hoa thường) và address.
+   - Logic: Nếu không truyền param thì trả về tất cả. Nếu truyền thì filter theo điều kiện.
+5. Thống kê sinh nhật: GET /api/v1/students/birthdays
+   - Logic: Trả về danh sách các học viên có ngày sinh trong tháng hiện tại.
+
+3.2 Đối với thực thể StudentScore (Quản lý điểm)
+
+Nhóm Cơ bản (CRUD)
+1. Lấy danh sách bảng điểm: GET /api/v1/scores
+2. Nhập điểm cho học viên: POST /api/v1/scores
+   - Input: studentId và các đầu điểm.
+   - Logic: Phải kiểm tra studentId có tồn tại trong danh sách Student hay không trước khi lưu.
+3. Xóa bảng điểm: DELETE /api/v1/scores/{id}
+
+Nhóm Nâng cao (Xử lý Logic)
+4. Top 3 học viên xuất sắc: GET /api/v1/scores/top-performers
+   - Logic: Tính điểm trung bình (Toán + Anh + Văn)/3. Sắp xếp và trả về thông tin 3 học viên có điểm trung bình cao nhất.
+5. Xếp loại học lực: GET /api/v1/scores/classification
+   - Logic: Trả về danh sách học viên kèm theo cột "Xếp loại" dựa trên điểm trung bình:
+     - >= 8.0: Giỏi
+     - 6.5 - 7.9: Khá
+     - 5.0 - 6.4: Trung bình
+     - < 5.0: Yếu
+
+4. Tiêu chí đánh giá (Dành cho học viên)
+1. Tính đúng đắn: API chạy đúng logic, trả về đúng HTTP Status Code (200, 201, 404...).
+2. Clean Code: Code rõ ràng, đặt tên biến/hàm theo chuẩn CamelCase, lớp Service xử lý logic hoàn toàn.
+3. Swagger UI: Các API được mô tả rõ ràng qua các Annotation @Operation, @Tag.
+4. DTO: Không có trường thừa trong Request (VD: khi POST Student không được yêu cầu truyền ID từ client).
