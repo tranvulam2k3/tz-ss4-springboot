@@ -1,7 +1,7 @@
 package com.techzenacademy.management.service;
 
-import com.techzenacademy.management.dto.UserRequest;
-import com.techzenacademy.management.dto.UserResponse;
+import com.techzenacademy.management.dto.user.UserRequest;
+import com.techzenacademy.management.dto.user.UserResponse;
 import com.techzenacademy.management.entity.User;
 import org.springframework.stereotype.Service;
 
@@ -22,12 +22,24 @@ public class UserService {
         users.add(User.builder().id(UUID.randomUUID()).name("Hoang Van E").age(23).phone("0777888999").address("Can Tho").build());
     }
 
+    // User user = new User("873264h34h","Nguyen Van A", )
+
     public List<UserResponse> findAll() {
         List<UserResponse> responses = new ArrayList<>();
         for (User user : users) {
             responses.add(mapToResponse(user));
         }
         return responses;
+    }
+
+    private UserResponse mapToResponse(User user) {
+        return UserResponse.builder()
+                .id(user.getId())
+                .name(user.getName())
+                .age(user.getAge())
+                .phone(user.getPhone())
+                .address(user.getAddress())
+                .build();
     }
 
     public UserResponse findById(UUID id) {
@@ -78,13 +90,5 @@ public class UserService {
         return false;
     }
 
-    private UserResponse mapToResponse(User user) {
-        return UserResponse.builder()
-                .id(user.getId())
-                .name(user.getName())
-                .age(user.getAge())
-                .phone(user.getPhone())
-                .address(user.getAddress())
-                .build();
-    }
+
 }

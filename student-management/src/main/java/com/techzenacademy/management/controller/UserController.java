@@ -1,8 +1,8 @@
 package com.techzenacademy.management.controller;
 
 import com.techzenacademy.management.dto.ApiResponse;
-import com.techzenacademy.management.dto.UserRequest;
-import com.techzenacademy.management.dto.UserResponse;
+import com.techzenacademy.management.dto.user.UserRequest;
+import com.techzenacademy.management.dto.user.UserResponse;
 import com.techzenacademy.management.service.UserService;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
@@ -34,6 +34,8 @@ public class UserController {
     @GetMapping
     @Operation(summary = "Get all users", description = "Retrieve a list of all users from mock data")
     public ResponseEntity<ApiResponse<List<UserResponse>>> getUsers() {
+        // User user = new User("873264h34h","Nguyen Van A", )
+        // ApiResponse<List<UserResponse>> respomse = new ApiResponse<List<UserResponse>>("""true",""data)
         return ResponseEntity.ok(ApiResponse.<List<UserResponse>>builder()
                 .success(true)
                 .data(userService.findAll())
