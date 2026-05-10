@@ -3,7 +3,6 @@ package com.techzenacademy.management.dto.person;
 import lombok.*;
 import lombok.experimental.FieldDefaults;
 
-import java.time.Instant;
 import java.time.LocalDate;
 import java.util.UUID;
 
@@ -19,7 +18,4 @@ public class PersonDetailResponse {
     String phone;
     String contactEmail;
     String address;
-    boolean isAdult;
-    Instant createdAt;
-    Instant updatedAt;
 }

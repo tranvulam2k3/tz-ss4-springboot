@@ -16,8 +16,7 @@ public class PersonMapper {
         return new PersonListItemResponse(
                 p.getId(),
                 p.getFullName(),
-                p.getContactEmail(),
-                p.isAdult());
+                p.getPhone());
     }
 
     /**
@@ -32,9 +31,6 @@ public class PersonMapper {
                 p.getDob(),
                 p.getPhone(),
                 p.getContactEmail(),
-                p.getAddress(),
-                p.isAdult(),
-                p.getCreatedAt(),
-                p.getUpdatedAt());
+                p.getAddress());
     }
 }

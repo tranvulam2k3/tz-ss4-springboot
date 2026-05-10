@@ -72,7 +72,6 @@ public class StudentService {
 
         // 3. Tạo Student gắn với Person
         Student student = Student.builder()
-                .id(person.getId())
                 .person(person)
                 .studentCode(req.getStudentCode())
                 .enrollmentYear(req.getEnrollmentYear())

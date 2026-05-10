@@ -13,6 +13,5 @@ import java.util.UUID;
 public class PersonListItemResponse {
     UUID id;
     String fullName;
-    String contactEmail;
-    Boolean isAdult;
+    String phone;
 }
