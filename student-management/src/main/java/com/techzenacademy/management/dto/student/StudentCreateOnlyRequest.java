@@ -3,21 +3,12 @@ package com.techzenacademy.management.dto.student;
 import lombok.*;
 import lombok.experimental.FieldDefaults;
 
-import java.time.LocalDate;
-
 @Data
 @NoArgsConstructor
 @AllArgsConstructor
 @Builder
 @FieldDefaults(level = AccessLevel.PRIVATE)
-public class StudentCreateRequest {
+public class StudentCreateOnlyRequest {
     String studentCode;
     Integer enrollmentYear;
-    String fullName;
-    LocalDate dob;
-    String phone;
-    String email;
-    String address;
-    String username;
-    String password;
 }

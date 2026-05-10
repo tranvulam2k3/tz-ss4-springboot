@@ -1,23 +1,25 @@
-package com.techzenacademy.management.dto.student;
+package com.techzenacademy.management.dto.person;
 
 import lombok.*;
 import lombok.experimental.FieldDefaults;
 
+import java.time.Instant;
 import java.time.LocalDate;
+import java.util.UUID;
 
 @Data
 @NoArgsConstructor
 @AllArgsConstructor
 @Builder
 @FieldDefaults(level = AccessLevel.PRIVATE)
-public class StudentCreateRequest {
-    String studentCode;
-    Integer enrollmentYear;
+public class PersonDetailResponse {
+    UUID id;
     String fullName;
     LocalDate dob;
     String phone;
-    String email;
+    String contactEmail;
     String address;
-    String username;
-    String password;
+    boolean isAdult;
+    Instant createdAt;
+    Instant updatedAt;
 }

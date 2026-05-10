@@ -1,94 +1,88 @@
 package com.techzenacademy.management.service;
 
-import com.techzenacademy.management.dto.user.UserRequest;
+import com.techzenacademy.management.dto.user.UserCreateRequest;
 import com.techzenacademy.management.dto.user.UserResponse;
 import com.techzenacademy.management.entity.User;
+import com.techzenacademy.management.mapper.UserMapper;
+import com.techzenacademy.management.repository.UserRepository;
+import com.techzenacademy.management.util.NormalizerUtil;
+import lombok.RequiredArgsConstructor;
+import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
+import org.springframework.web.server.ResponseStatusException;
 
-import java.util.ArrayList;
 import java.util.List;
 import java.util.UUID;
 
 @Service
+@RequiredArgsConstructor
 public class UserService {
-    private final List<User> users = new ArrayList<>();
+    private final UserRepository userRepository;
+    private final UserMapper userMapper;
 
-    public UserService() {
-        // Initialize with 5 mock data entries
-        users.add(User.builder().id(UUID.randomUUID()).name("Nguyen Van A").age(20).phone("0123456789").address("Da Nang").build());
-        users.add(User.builder().id(UUID.randomUUID()).name("Tran Thi B").age(22).phone("0987654321").address("Ha Noi").build());
-        users.add(User.builder().id(UUID.randomUUID()).name("Le Van C").age(25).phone("0111222333").address("Ho Chi Minh").build());
-        users.add(User.builder().id(UUID.randomUUID()).name("Pham Thi D").age(21).phone("0444555666").address("Hue").build());
-        users.add(User.builder().id(UUID.randomUUID()).name("Hoang Van E").age(23).phone("0777888999").address("Can Tho").build());
+    /**
+     * Lấy danh sách tất cả người dùng
+     */
+    public List<UserResponse> getAllUsers() {
+        return userRepository.findAll().stream()
+                .map(userMapper::toResponse)
+                .toList();
     }
 
-    // User user = new User("873264h34h","Nguyen Van A", )
+    /**
+     * Lấy chi tiết người dùng theo ID
+     */
+    public UserResponse getUserById(UUID id) {
+        User user = userRepository.findById(id)
+                .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND,
+                        "Không tìm thấy người dùng với ID: " + id));
+        return userMapper.toResponse(user);
+    }
 
-    public List<UserResponse> findAll() {
-        List<UserResponse> responses = new ArrayList<>();
-        for (User user : users) {
-            responses.add(mapToResponse(user));
+    /**
+     * Tạo mới người dùng
+     */
+    public UserResponse createUser(UserCreateRequest req) {
+        String username = NormalizerUtil.trimToNull(req.getUsername());
+        String email = NormalizerUtil.normalizeEmail(req.getEmail());
+
+        if (userRepository.existsByUsername(username)) {
+            throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "Tên đăng nhập đã tồn tại");
         }
-        return responses;
-    }
-
-    private UserResponse mapToResponse(User user) {
-        return UserResponse.builder()
-                .id(user.getId())
-                .name(user.getName())
-                .age(user.getAge())
-                .phone(user.getPhone())
-                .address(user.getAddress())
-                .build();
-    }
-
-    public UserResponse findById(UUID id) {
-        for (User user : users) {
-            if (user.getId().equals(id)) {
-                return mapToResponse(user);
-            }
+        if (userRepository.existsByEmail(email)) {
+            throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "Email đã tồn tại");
         }
-        return null;
-    }
 
-    public UserResponse save(UserRequest request) {
         User user = User.builder()
-                .id(UUID.randomUUID())
-                .name(request.getName())
-                .age(request.getAge())
-                .phone(request.getPhone())
-                .address(request.getAddress())
+                .username(username)
+                .email(email)
+                .passwordHash("hashed_" + req.getPassword()) // Giả lập hash password
+                .status("ACTIVE")
                 .build();
-        users.add(user);
-        return mapToResponse(user);
+
+        user = userRepository.save(user);
+        return userMapper.toResponse(user);
     }
 
-    public UserResponse update(UUID id, UserRequest request) {
-        for (int i = 0; i < users.size(); i++) {
-            if (users.get(i).getId().equals(id)) {
-                User updatedUser = User.builder()
-                        .id(id)
-                        .name(request.getName())
-                        .age(request.getAge())
-                        .phone(request.getPhone())
-                        .address(request.getAddress())
-                        .build();
-                users.set(i, updatedUser);
-                return mapToResponse(updatedUser);
-            }
+    /**
+     * Cập nhật trạng thái người dùng
+     */
+    @Transactional
+    public void updateStatus(UUID id, String status) {
+        User user = userRepository.findById(id)
+                .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "Không tìm thấy người dùng"));
+        user.setStatus(status);
+        userRepository.save(user);
+    }
+
+    /**
+     * Xóa người dùng theo ID
+     */
+    public void deleteUser(UUID id) {
+        if (!userRepository.existsById(id)) {
+            throw new ResponseStatusException(HttpStatus.NOT_FOUND, "Không tìm thấy người dùng với ID: " + id);
         }
-        return null;
+        userRepository.deleteById(id);
     }
-
-    public boolean deleteById(UUID id) {
-        for (int i = 0; i < users.size(); i++) {
-            if (users.get(i).getId().equals(id)) {
-                users.remove(i);
-                return true;
-            }
-        }
-        return false;
-    }
-
-
 }

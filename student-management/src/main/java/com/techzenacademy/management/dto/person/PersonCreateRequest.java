@@ -1,4 +1,4 @@
-package com.techzenacademy.management.dto.student;
+package com.techzenacademy.management.dto.person;
 
 import lombok.*;
 import lombok.experimental.FieldDefaults;
@@ -10,14 +10,10 @@ import java.time.LocalDate;
 @AllArgsConstructor
 @Builder
 @FieldDefaults(level = AccessLevel.PRIVATE)
-public class StudentCreateRequest {
-    String studentCode;
-    Integer enrollmentYear;
+public class PersonCreateRequest {
     String fullName;
     LocalDate dob;
     String phone;
-    String email;
+    String contactEmail;
     String address;
-    String username;
-    String password;
 }

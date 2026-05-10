@@ -1,9 +1,8 @@
-package com.techzenacademy.management.dto.user;
+package com.techzenacademy.management.dto.person;
 
 import lombok.*;
 import lombok.experimental.FieldDefaults;
 
-import java.time.Instant;
 import java.util.UUID;
 
 @Data
@@ -11,10 +10,9 @@ import java.util.UUID;
 @AllArgsConstructor
 @Builder
 @FieldDefaults(level = AccessLevel.PRIVATE)
-public class UserResponse {
+public class PersonListItemResponse {
     UUID id;
-    String username;
-    String email;
-    String status;
-    Instant createdAt;
+    String fullName;
+    String contactEmail;
+    Boolean isAdult;
 }

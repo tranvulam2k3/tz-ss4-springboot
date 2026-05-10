@@ -3,18 +3,13 @@ package com.techzenacademy.management.dto.user;
 import lombok.*;
 import lombok.experimental.FieldDefaults;
 
-import java.time.Instant;
-import java.util.UUID;
-
 @Data
 @NoArgsConstructor
 @AllArgsConstructor
 @Builder
 @FieldDefaults(level = AccessLevel.PRIVATE)
-public class UserResponse {
-    UUID id;
+public class UserCreateRequest {
     String username;
     String email;
-    String status;
-    Instant createdAt;
+    String password;
 }

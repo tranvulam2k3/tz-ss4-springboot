@@ -1,5 +1,7 @@
 package com.techzenacademy.management.entity;
 
+import com.techzenacademy.management.constant.FieldLength;
+import jakarta.persistence.*;
 import lombok.*;
 import lombok.experimental.FieldDefaults;
 
@@ -12,27 +14,27 @@ import java.util.UUID;
 @AllArgsConstructor
 @Builder
 @FieldDefaults(level = AccessLevel.PRIVATE)
+@Entity
+@Table(name = "students")
 public class Student {
+    @Id
+    @Column(name = "person_id")
     UUID id;
-    String fullName;
-    Integer age;
-    String email;
 
+    @MapsId
+    @OneToOne(fetch = FetchType.LAZY, optional = false)
+    @JoinColumn(name = "person_id")
+    Person person;
+
+    @Column(name = "student_code", unique = true, nullable = false, length = FieldLength.STUDENT_CODE_MAX_LENGTH)
+    String studentCode;
+
+    @Column(name = "enrollment_year")
+    Integer enrollmentYear;
+
+    @Column(name = "created_at", nullable = false, insertable = false, updatable = false)
     Instant createdAt;
+
+    @Column(name = "updated_at", nullable = false, insertable = false, updatable = false)
     Instant updatedAt;
-
-    // === Business helpers ===
-    public boolean isAdult() {
-        return age != null && age >= 18;
-    }
-
-    public void onCreate() {
-        Instant now = Instant.now();
-        this.createdAt = now;
-        this.updatedAt = now;
-    }
-
-    public void onUpdate() {
-        this.updatedAt = Instant.now();
-    }
 }

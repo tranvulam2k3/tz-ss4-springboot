@@ -11,6 +11,7 @@ import java.time.Instant;
 @JsonInclude(JsonInclude.Include.NON_NULL)
 public class ApiResponse<T> {
     boolean success;
+    String message;
     T data;
     ApiError error;
 

@@ -1,0 +1,32 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE hibernate-configuration PUBLIC
+        "-//Hibernate/Hibernate Configuration DTD 3.0//EN"
+        "http://www.hibernate.org/dtd/hibernate-configuration-3.0.dtd">
+<hibernate-configuration>
+    <session-factory>
+        <!-- Database connection settings -->
+        <property name="hibernate.connection.driver_class">org.postgresql.Driver</property>
+        <property name="hibernate.connection.url">jdbc:postgresql://localhost:5432/management</property>
+        <property name="hibernate.connection.username">postgres</property>
+        <property name="hibernate.connection.password">123123</property>
+
+        <!-- SQL dialect: giúp Hibernate hiểu cách viết SQL phù hợp với PostgreSQL -->
+        <property name="hibernate.dialect">org.hibernate.dialect.PostgreSQLDialect</property>
+
+        <!--  Hiển thị câu SQL ra console -->
+        <property name="hibernate.show_sql">true</property>
+        <property name="hibernate.format_sql">true</property>
+
+        <!-- 
+        hbm2ddl.auto:
+            - none      : không làm gì (bạn phải tự tạo table)
+            - create    : mỗi lần chạy sẽ xóa và tạo lại DB
+            - update    : tự update bảng (thêm cột nếu thiếu)
+            - validate  : kiểm tra schema có đúng không
+        -->      
+         <property name="hibernate.hbm2ddl.auto">none</property>
+
+        <!-- Khai báo class Entity để Hibernate quản lý -->
+        <mapping class="com.techzenacademy.management.entity.Student"/>
+    </session-factory>
+</hibernate-configuration>
