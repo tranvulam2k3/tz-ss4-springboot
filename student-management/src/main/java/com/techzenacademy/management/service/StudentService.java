@@ -14,7 +14,9 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.server.ResponseStatusException;
 
+import java.util.ArrayList;
 import java.util.List;
+import java.util.Optional;
 import java.util.UUID;
 
 @Service
@@ -29,19 +31,23 @@ public class StudentService {
      * Lấy danh sách tất cả học viên
      */
     public List<StudentListItemResponse> getAllStudents() {
-        return studentRepo.findAll()
-                .stream()
-                .map(studentMapper::toListItemResponse)
-                .toList();
+        List<Student> students = studentRepo.findAll();
+        List<StudentListItemResponse> list = new ArrayList<>();
+        for (Student student : students) {
+            list.add(studentMapper.toListItemResponse(student));
+        }
+        return list;
     }
 
     /**
      * Lấy thông tin chi tiết học viên theo ID
      */
     public StudentDetailResponse getStudentById(UUID id) {
-        Student student = studentRepo.findById(id)
-                .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND,
-                        "Không tìm thấy học viên với ID: " + id));
+        Optional<Student> studentOptional = studentRepo.findById(id);
+        if (!studentOptional.isPresent()) {
+            throw new ResponseStatusException(HttpStatus.NOT_FOUND, "Không tìm thấy học viên với ID: " + id);
+        }
+        Student student = studentOptional.get();
         return studentMapper.toDetailResponse(student);
     }
 
@@ -149,9 +155,12 @@ public class StudentService {
     public StudentSummaryResponse getSummaryReport() {
         long total = studentRepo.count();
         long active = userRepo.countByStatus("ACTIVE");
-        String latestName = studentRepo.findTopByOrderByCreatedAtDesc()
-                .map(s -> s.getPerson().getFullName())
-                .orElse("N/A");
+
+        Optional<Student> latestStudentOptional = studentRepo.findTopByOrderByCreatedAtDesc();
+        String latestName = "N/A";
+        if (latestStudentOptional.isPresent()) {
+            latestName = latestStudentOptional.get().getPerson().getFullName();
+        }
 
         return new StudentSummaryResponse(total, active, latestName);
     }
